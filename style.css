@@ -1,0 +1,28 @@
+h1 {
+    text-align: center;
+}
+
+.jumbo{
+    margin: 30px;
+    background-color: navy;
+    color: navy;
+    height: 200px;
+}
+
+.form {
+    border: navy 1px solid;
+    margin: 30px;
+    font-weight: bold;
+}
+
+.input {
+    margin: 10px;
+}
+.card-header {
+    background-color: navy;
+    color: navy;
+}
+
+.button {
+    margin: 10px;
+}
