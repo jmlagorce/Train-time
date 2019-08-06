@@ -12,22 +12,63 @@
   firebase.initializeApp(firebaseConfig);
 
   var database = firebase.database();
-  console.log(moment().format("X"));
-  function nextArrival(frequency, firstTrain) {
-    //
+
+  function minAway (){
+    var currentTime = moment().format("X")/60;
+
+    var firstTrainConverted = moment(firstTrain, "HH:mm").format("X")/60;
     
+    var timeDiff = currentTime - firstTrainConverted;
+
+    var timeRemain = timeDiff % parseInt(frequency);
+
+    var minAway = parseInt(frequency) - timeRemain;
+
+    return minAway;
+
+    
+  }
+  
+  function nextArrival(frequency, firstTrain) {
+    //converts unix into minutes.
+    var currentTime = moment().format("X")/60;
+
+    var firstTrainConverted = moment(firstTrain, "HH:mm").format("X")/60;
+    
+    var timeDiff = currentTime - firstTrainConverted;
+
+    var timeRemain = timeDiff % parseInt(frequency);
+
+    var minAway = parseInt(frequency) - timeRemain;
+
+    var nextTrain = moment((currentTime + minAway)*60, "X").format("HH:mm");
+
+    
+    return nextTrain;
+    
+    
+  
+
+
+    // var minutesLeft = moment() -
+     // Test case 2:
+    // 16 - 00 = 16
+    // 16 % 7 = 2 (Modulus is the remainder)
+    // 7 - 2 = 5 minutes away
+    // 5 + 3:16 = 3:21
   };
+  
     
     $("#add-employee-btn").on("click", function(event) {
         event.preventDefault();
-        console.log("click");
+        
         
         var trainName = $("#train-name").val();
         var destination = $("#destination").val();
         var firstTrain = $("#first-train").val();
         var frequency = $("#frequency").val();
         
-
+        nextArrival(frequency, firstTrain);
         var newTrain = {
           name: trainName,
           destination: destination,
@@ -37,10 +78,7 @@
 
         database.ref().push(newTrain);
 
-    console.log(newTrain.name);
-    console.log(newTrain.destination);
-    console.log(newTrain.firsttrain);
-    console.log(newTrain.frequency);
+    
 
     $("#employee-name-input").val("");
     $("#role-input").val("");
@@ -49,19 +87,16 @@
       });
 
       database.ref().on("child_added", function(childSnapshot) {
-        console.log(childSnapshot.val());
+        
       
         
         var trainName = childSnapshot.val().name;
         var trainDestination = childSnapshot.val().destination;
         var trainFirst = childSnapshot.val().firsttrain;
         var trainFrequency = childSnapshot.val().frequency;
-      
+        var nextTime = nextArrival(trainFrequency, trainFirst);
+        // var minAway = minAway(next, );
         
-        console.log(trainName);
-        console.log(trainDestination);
-        console.log(trainFirst);
-        console.log(trainFrequency);
       
      
       
@@ -74,7 +109,9 @@
           $("<td>").text(trainName),
           $("<td>").text(trainDestination),
           $("<td>").text(trainFrequency),
-          $("<td>").text(trainFirst),
+          $("<td>").text(nextTime),
+          // $("<td>").text(minAway),
+
           
    
         );
